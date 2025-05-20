@@ -1,0 +1,86 @@
+/* Hot dog theme CSS */
+.hotdog {
+  /* Base colors */
+  --hotdog-red: #FF0000;
+  --hotdog-yellow: #FFFF00;
+  --hotdog-mustard: #E1AD01;
+  --hotdog-bun: #C68E17;
+  
+  /* Background */
+  --background-primary: var(--hotdog-mustard);
+  --background-secondary: var(--hotdog-bun);
+  
+  /* Text */
+  --text-primary: #000000;
+  --text-secondary: var(--hotdog-red);
+  --text-accent: #FFFFFF;
+  
+  /* UI Elements */
+  --button-primary: var(--hotdog-red);
+  --button-secondary: var(--hotdog-yellow);
+  --border-color: var(--hotdog-red);
+  
+  /* Apply base styles */
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+/* Override styles for hotdog theme */
+.hotdog body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.hotdog .bg-gray-50 {
+  background-color: var(--background-primary);
+}
+
+.hotdog .bg-gray-100 {
+  background-color: var(--background-secondary);
+}
+
+.hotdog .bg-white {
+  background-color: var(--hotdog-yellow);
+}
+
+.hotdog .text-gray-900 {
+  color: var(--text-primary);
+}
+
+.hotdog .text-gray-600, 
+.hotdog .text-gray-700,
+.hotdog .text-gray-800 {
+  color: var(--text-secondary);
+}
+
+.hotdog .border-gray-200,
+.hotdog .border-gray-300 {
+  border-color: var(--border-color);
+}
+
+/* Recipe Card hotdog theme overrides */
+.hotdog .bg-yellow-400,
+.hotdog .dark\:bg-yellow-500 {
+  background-color: var(--hotdog-red);
+}
+
+.hotdog .text-blue-600 {
+  color: var(--text-secondary);
+}
+
+.hotdog .hover\:bg-gray-50:hover {
+  background-color: var(--hotdog-yellow);
+}
+
+.hotdog .bg-blue-600 {
+  background-color: var(--hotdog-red);
+}
+
+.hotdog .hover\:bg-blue-700:hover {
+  background-color: #CC0000;
+}
+
+/* Recipe card tab color */
+.hotdog .recipe-card-header h2 {
+  border-color: var(--hotdog-red) !important;
+}

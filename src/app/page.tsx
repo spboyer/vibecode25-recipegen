@@ -2,12 +2,52 @@
 
 import { useState } from 'react';
 import RecipeCard from '@/components/RecipeCard';
+import { useTheme } from '@/components/ThemeProvider';
 
 interface Recipe {
 	name: string;
 	ingredients: string[];
 	instructions: string[];
 }
+
+interface DietaryPreference {
+	id: string;
+	label: string;
+	description: string;
+}
+
+const DIETARY_PREFERENCES: DietaryPreference[] = [
+	{
+		id: 'glutenFree',
+		label: 'Gluten Free',
+		description: 'Excludes wheat, barley, rye, and their derivatives',
+	},
+	{
+		id: 'dairyFree',
+		label: 'Dairy Free',
+		description: 'No milk, cheese, butter, or dairy products',
+	},
+	{
+		id: 'keto',
+		label: 'Keto',
+		description: 'High-fat, low-carb diet',
+	},
+	{
+		id: 'vegan',
+		label: 'Vegan',
+		description: 'No animal products',
+	},
+	{
+		id: 'vegetarian',
+		label: 'Vegetarian',
+		description: 'No meat or fish',
+	},
+	{
+		id: 'paleo',
+		label: 'Paleo',
+		description: 'Based on foods available to our prehistoric ancestors',
+	},
+];
 
 const mockRecipes: Recipe[] = [
 	{
@@ -76,6 +116,22 @@ export default function Home() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [useMockData, setUseMockData] = useState(true);
+	const [dietaryPreferences, setDietaryPreferences] = useState<Set<string>>(
+		new Set()
+	);
+	const { themeMode, isDarkMode, isHotdogMode, toggleTheme } = useTheme();
+
+	const handleDietaryPreferenceChange = (preferenceId: string) => {
+		setDietaryPreferences((prev) => {
+			const newPreferences = new Set(prev);
+			if (newPreferences.has(preferenceId)) {
+				newPreferences.delete(preferenceId);
+			} else {
+				newPreferences.add(preferenceId);
+			}
+			return newPreferences;
+		});
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -98,6 +154,7 @@ export default function Home() {
 				},
 				body: JSON.stringify({
 					ingredients: ingredients.split(',').map((i) => i.trim()),
+					dietaryPreferences: Array.from(dietaryPreferences),
 				}),
 			});
 
@@ -114,25 +171,81 @@ export default function Home() {
 	};
 
 	return (
-		<main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+		<main className="min-h-screen bg-gray-50 dark:bg-gray-900 hotdog:bg-hotdog-mustard py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
 			<div className="max-w-7xl mx-auto">
 				<div className="text-center mb-12">
-					<h1 className="text-4xl font-bold text-gray-900 mb-4">
+					<div className="flex justify-end mb-4">
+						<button
+							onClick={toggleTheme}
+							className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 hotdog:bg-hotdog-yellow hotdog:hover:bg-hotdog-red"
+							aria-label="Toggle theme"
+						>
+							{isDarkMode && (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-6 w-6 text-yellow-400"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+									/>
+								</svg>
+							)}
+							{!isDarkMode && !isHotdogMode && (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-6 w-6 text-gray-600"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+									/>
+								</svg>
+							)}
+							{isHotdogMode && (
+								<svg 
+									xmlns="http://www.w3.org/2000/svg" 
+									className="h-6 w-6 text-hotdog-red"
+									viewBox="0 0 24 24" 
+									fill="none" 
+									stroke="currentColor" 
+									strokeWidth="2" 
+									strokeLinecap="round" 
+									strokeLinejoin="round"
+								>
+									<path d="M5.5 8C3.57 8 2 9.57 2 11.5S3.57 15 5.5 15h13c1.93 0 3.5-1.57 3.5-3.5S20.43 8 19.5 8h-14Z" />
+									<path d="M8 8c0-2.24 1.79-4 4-4s4 1.76 4 4" />
+									<path d="M8 15c0 2.24 1.79 4 4 4s4-1.76 4-4" />
+								</svg>
+							)}
+						</button>
+					</div>
+					<h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
 						Recipe Generator
 					</h1>
-					<p className="text-xl text-gray-600">
+					<p className="text-xl text-gray-600 dark:text-gray-300">
 						Enter your ingredients and let AI suggest some delicious recipes!
 					</p>
 					<div className="mt-4 flex items-center justify-center gap-2">
-						<label className="text-sm text-gray-600">
+						<label className="text-sm text-gray-600 dark:text-gray-300">
 							Use mock data for testing:
 						</label>
 						<button
 							onClick={() => setUseMockData(!useMockData)}
 							className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
 								useMockData
-									? 'bg-green-600 text-white hover:bg-green-700'
-									: 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+									? 'bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600'
+									: 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
 							}`}
 						>
 							{useMockData ? 'Using Mock Data' : 'Using API'}
@@ -144,17 +257,52 @@ export default function Home() {
 					onSubmit={handleSubmit}
 					className="max-w-2xl mx-auto mb-12"
 				>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-6">
 						<textarea
 							value={ingredients}
 							onChange={(e) => setIngredients(e.target.value)}
-							placeholder="Enter ingredients separated by commas (e.g., chicken, rice, tomatoes)"              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px] resize-none text-gray-900 placeholder:text-gray-500"
+							placeholder="Enter ingredients separated by commas (e.g., chicken, rice, tomatoes)"
+							className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px] resize-none text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder:text-gray-500 dark:placeholder:text-gray-400 transition-colors duration-200"
 							required
 						/>
+
+						<div className="space-y-4">
+							<h3 className="text-lg font-medium text-gray-900 dark:text-white">
+								Dietary Preferences
+							</h3>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								{DIETARY_PREFERENCES.map((preference) => (
+									<label
+										key={preference.id}
+										className="relative flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer group"
+									>
+										<div className="flex items-center h-5">
+											<input
+												type="checkbox"
+												checked={dietaryPreferences.has(preference.id)}
+												onChange={() =>
+													handleDietaryPreferenceChange(preference.id)
+												}
+												className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:checked:bg-blue-600"
+											/>
+										</div>
+										<div className="ml-3">
+											<span className="text-sm font-medium text-gray-900 dark:text-white">
+												{preference.label}
+											</span>
+											<p className="text-xs text-gray-500 dark:text-gray-400">
+												{preference.description}
+											</p>
+										</div>
+									</label>
+								))}
+							</div>
+						</div>
+
 						<button
 							type="submit"
 							disabled={loading}
-							className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+							className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
 						>
 							{loading ? 'Generating Recipes...' : 'Generate Recipes'}
 						</button>
@@ -162,12 +310,14 @@ export default function Home() {
 				</form>
 
 				{error && (
-					<div className="text-red-600 text-center mb-8">{error}</div>
+					<div className="text-red-600 dark:text-red-400 text-center mb-8">
+						{error}
+					</div>
 				)}
 
 				{loading && (
 					<div className="flex justify-center items-center mb-8">
-						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
 					</div>
 				)}
 

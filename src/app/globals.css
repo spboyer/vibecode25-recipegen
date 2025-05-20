@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./hotdog-theme.css";
 
 :root {
   --background: #ffffff;
