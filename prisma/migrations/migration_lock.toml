@@ -1,0 +1,2 @@
+# This is a Prisma migration lock file, it's supposed to be in TOML format
+provider = "postgresql"

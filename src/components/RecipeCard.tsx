@@ -1,12 +1,10 @@
-interface Recipe {
-  name: string;
-  ingredients: string[];
-  instructions: string[];
-  dietaryRestrictions?: string[];
-}
+import { FavoriteButton } from './FavoriteButton';
+import { Recipe } from '@/types';
 
 interface RecipeCardProps {
   recipe: Recipe;
+  isFavorited?: boolean;
+  onFavoriteToggle?: (isFavorited: boolean) => void;
 }
 
 // Dietary restriction badge colors
@@ -29,8 +27,13 @@ const DIETARY_LABELS = {
   paleo: 'Paleo',
 } as const;
 
-export default function RecipeCard({ recipe }: RecipeCardProps) {  return (
+export default function RecipeCard({ recipe, isFavorited = false, onFavoriteToggle }: RecipeCardProps) {  return (
     <div className="bg-white dark:bg-gray-800 hotdog:bg-hotdog-yellow rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative">
+      <FavoriteButton 
+        recipe={recipe}
+        isFavorited={isFavorited}
+        onFavoriteToggle={onFavoriteToggle}
+      />
       <div className="p-6 pb-16">
         {/* Recipe header with title and dietary badges */}
         <div className="recipe-card-header mb-6">          <div className="flex flex-wrap items-center gap-2 mb-3">

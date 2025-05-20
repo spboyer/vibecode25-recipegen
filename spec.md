@@ -1,0 +1,2 @@
+- need to add a way to deploy the app to azure with AZD
+- should add playwright for testing

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import RecipeCard from '@/components/RecipeCard';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -174,7 +175,13 @@ export default function Home() {
 		<main className="min-h-screen bg-gray-50 dark:bg-gray-900 hotdog:bg-hotdog-mustard py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
 			<div className="max-w-7xl mx-auto">
 				<div className="text-center mb-12">
-					<div className="flex justify-end mb-4">
+					<div className="flex justify-between items-center mb-4">
+						<Link
+							href="/favorites"
+							className="p-2 rounded-lg bg-blue-600 dark:bg-blue-500 hotdog:bg-hotdog-red text-white hover:bg-blue-700 dark:hover:bg-blue-600 hotdog:hover:bg-red-700 transition-colors px-4 py-2"
+						>
+							Favorite Recipes
+						</Link>
 						<button
 							onClick={toggleTheme}
 							className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 hotdog:bg-hotdog-yellow hotdog:hover:bg-hotdog-red"
