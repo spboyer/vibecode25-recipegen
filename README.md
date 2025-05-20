@@ -1,4 +1,12 @@
-# Recipe Generator with Favorites
+# Vibe Coding at BUILD 2025
+
+## Screenshots
+
+### Dark Mode
+![Dark Mode](./screenshot-dark.png)
+
+### Hot Dog Mode
+![Hot Dog Mode](./screenshot-hotdog.png)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It features an AI-powered recipe generator with a favorites feature that allows you to save recipes to a PostgreSQL database. The application is containerized with Docker and Docker Compose for easy local development.
 
