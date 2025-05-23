@@ -22,10 +22,9 @@ FROM base AS dev
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Install required dependencies: netcat for connection checks and openssl for Prisma
-RUN apk add --no-cache netcat-openbsd openssl
+# Install required dependencies: netcat for connection checks, openssl for Prisma, and bash for scripts
+RUN apk add --no-cache netcat-openbsd openssl bash
 # Ensure the scripts have Unix line endings and are executable
-RUN sed -i 's/\r$//' docker-start.sh && chmod +x docker-start.sh
 RUN sed -i 's/\r$//' docker-start-simple.sh && chmod +x docker-start-simple.sh
 
 # Production build

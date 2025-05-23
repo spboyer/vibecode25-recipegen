@@ -16,22 +16,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [themeMode, setThemeMode] = useState<ThemeMode>('light');
-
-  useEffect(() => {
-    // Check for saved preference or system preference
-    const savedTheme = localStorage.getItem('theme') as ThemeMode | null;
-    const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Apply the saved theme or use system preference
-    if (savedTheme === 'dark' || (!savedTheme && systemDarkMode)) {
-      applyTheme('dark');
-    } else if (savedTheme === 'hotdog') {
-      applyTheme('hotdog');
-    } else {
-      applyTheme('light');
-    }
-  }, []);
-
+  const [mounted, setMounted] = useState(false);
   const applyTheme = (mode: ThemeMode) => {
     // Remove all theme classes
     document.documentElement.classList.remove('dark', 'hotdog');
@@ -46,6 +31,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setThemeMode(mode);
   };
 
+  useEffect(() => {
+    setMounted(true);
+    
+    // Check for saved preference or system preference
+    const savedTheme = localStorage.getItem('theme') as ThemeMode | null;
+    const systemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Apply the saved theme or use system preference
+    if (savedTheme === 'dark' || (!savedTheme && systemDarkMode)) {
+      applyTheme('dark');
+    } else if (savedTheme === 'hotdog') {
+      applyTheme('hotdog');
+    } else {
+      applyTheme('light');
+    }
+  }, []);
+
   const toggleTheme = () => {
     // Cycle through three modes: light -> dark -> hotdog -> light
     const nextMode = themeMode === 'light' 
@@ -55,6 +57,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         : 'light';
     applyTheme(nextMode);
   };
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <ThemeContext.Provider value={{ 
+        themeMode: 'light', 
+        isDarkMode: false, 
+        isHotdogMode: false,
+        toggleTheme: () => {},
+        setThemeMode: () => {} 
+      }}>
+        {children}
+      </ThemeContext.Provider>    );
+  }
+
   return (
     <ThemeContext.Provider value={{ 
       themeMode, 
