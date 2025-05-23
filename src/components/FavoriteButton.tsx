@@ -4,6 +4,14 @@ import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { Recipe } from '@/types';
 
+interface Favorite {
+  id: number;
+  userId: string;
+  recipeName: string;
+  recipeData: Recipe;
+  createdAt: string;
+}
+
 interface FavoriteButtonProps {
   recipe: Recipe;
   isFavorited?: boolean;
@@ -23,13 +31,12 @@ export function FavoriteButton({
     if (isLoading) return;
 
     setIsLoading(true);
-    try {
-      if (favorited) {
+    try {      if (favorited) {
         // Find the favorite ID and delete it
         // This is a simplified approach - in a real app, you'd store the favorite ID when fetching favorites
         const response = await fetch('/api/favorites');
-        const favorites = await response.json();
-        const favorite = favorites.find((fav: any) => fav.recipeName === recipe.name);
+        const favorites: Favorite[] = await response.json();
+        const favorite = favorites.find((fav) => fav.recipeName === recipe.name);
 
         if (favorite) {
           await fetch(`/api/favorites/${favorite.id}`, {

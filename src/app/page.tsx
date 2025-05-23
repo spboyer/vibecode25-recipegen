@@ -120,7 +120,7 @@ export default function Home() {
 	const [dietaryPreferences, setDietaryPreferences] = useState<Set<string>>(
 		new Set()
 	);
-	const { themeMode, isDarkMode, isHotdogMode, toggleTheme } = useTheme();
+	const { isDarkMode, isHotdogMode, toggleTheme } = useTheme();
 
 	const handleDietaryPreferenceChange = (preferenceId: string) => {
 		setDietaryPreferences((prev) => {

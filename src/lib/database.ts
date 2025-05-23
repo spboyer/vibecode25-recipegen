@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { Recipe } from '@/types';
 
 export interface FavoriteRecipe {
@@ -17,8 +17,10 @@ export async function getFavoriteRecipes(userId: string): Promise<FavoriteRecipe
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
-    
-    return favorites;
+      return favorites.map(favorite => ({
+      ...favorite,
+      recipeData: favorite.recipeData as unknown as Recipe,
+    }));
   } catch (error) {
     console.error('Error fetching favorite recipes:', error);
     throw error;
@@ -35,11 +37,14 @@ export async function addFavoriteRecipe(userId: string, recipe: Recipe): Promise
       data: {
         userId,
         recipeName: recipe.name,
-        recipeData: recipe as any,
+        recipeData: recipe as unknown as Prisma.JsonObject,
       },
     });
     
-    return favorite;
+    return {
+      ...favorite,
+      recipeData: favorite.recipeData as unknown as Recipe,
+    };
   } catch (error) {
     console.error('Error adding favorite recipe:', error);
     throw error;

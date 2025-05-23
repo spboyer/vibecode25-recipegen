@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import RecipeCard from '@/components/RecipeCard';
 import { useTheme } from '@/components/ThemeProvider';
 import Link from 'next/link';
+import { Recipe } from '@/types';
 
 interface Favorite {
   id: number;
   userId: string;
   recipeName: string;
-  recipeData: any;
+  recipeData: Recipe;
   createdAt: string;
 }
 
@@ -17,7 +18,7 @@ export default function Favorites() {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { themeMode, isDarkMode, isHotdogMode, toggleTheme } = useTheme();
+  const { isDarkMode, isHotdogMode, toggleTheme } = useTheme();
 
   useEffect(() => {
     const fetchFavorites = async () => {

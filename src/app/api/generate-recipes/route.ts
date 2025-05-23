@@ -1,13 +1,15 @@
 import { AzureOpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 
-// Create Azure OpenAI client
-const client = new AzureOpenAI({
-  apiKey: process.env.AZURE_OPENAI_KEY!,
-  endpoint: process.env.AZURE_OPENAI_ENDPOINT!,
-  apiVersion: process.env.AZURE_OPENAI_API_VERSION!,
-  deployment: process.env.AZURE_OPENAI_DEPLOYMENT_NAME!,
-});
+// Helper function to create Azure OpenAI client
+function createAzureOpenAIClient() {
+  return new AzureOpenAI({
+    apiKey: process.env.AZURE_OPENAI_KEY!,
+    endpoint: process.env.AZURE_OPENAI_ENDPOINT!,
+    apiVersion: process.env.AZURE_OPENAI_API_VERSION!,
+    deployment: process.env.AZURE_OPENAI_DEPLOYMENT_NAME!,
+  });
+}
 
 // Helper function to determine which dietary restrictions a recipe meets
 function analyzeDietaryRestrictions(recipe: { name: string; ingredients: string[]; instructions: string[] }) {
@@ -86,6 +88,7 @@ function analyzeDietaryRestrictions(recipe: { name: string; ingredients: string[
 
 export async function POST(request: Request) {
   try {
+    const client = createAzureOpenAIClient();
     const { ingredients, dietaryPreferences } = await request.json();
     
     let dietaryContext = '';

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // In a real app, you'd get the actual user ID from the session/auth
     // For demo purposes, we're using a static user ID
